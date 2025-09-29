@@ -1,0 +1,295 @@
+<!--
+  portfolio_index.html
+  Plantilla de una sola página (single-page) para un portfolio personal.
+
+  Instrucciones rápidas:
+  - Reemplaza `assets/me.jpg` por tu foto real.
+  - Reemplaza textos (nombre, bio, proyectos, enlaces) con tu información.
+  - Sube `assets/cv.pdf` si quieres que el botón "Descargar CV" funcione.
+  - Para el formulario de contacto: sustituye ACTION por tu endpoint de Formspree u otro servicio.
+
+  Estructura recomendada de carpetas:
+  /index.html  (este archivo)
+  /assets/me.jpg
+  /assets/project-1.jpg
+  /assets/cv.pdf
+
+  ¿Quieres una versión en React + Tailwind o una versión con CMS? Dímelo y te la preparo.
+-->
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portfolio — Tu Nombre</title>
+  <meta name="description" content="Portfolio de Tu Nombre — desarrollador DAM. Proyectos, habilidades y contacto." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta property="og:title" content="Portfolio — Tu Nombre">
+  <meta property="og:description" content="Soy Tu Nombre, desarrollador DAM. Aquí puedes ver mis proyectos, habilidades y cómo contactarme.">
+  <meta property="og:type" content="website">
+  <style>
+    :root{
+      --bg: #0f1724;
+      --card: #0b1220;
+      --accent: #06b6d4;
+      --muted: #94a3b8;
+      --text: #e6eef6;
+      --glass: rgba(255,255,255,0.04);
+      --radius: 14px;
+      --maxw: 1100px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(180deg,#071129 0%, #071025 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      scroll-behavior:smooth;
+    }
+
+    /* Container */
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:28px}
+
+    /* Header / nav */
+    header{position:sticky;top:12px;z-index:40;background:transparent}
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700}
+    nav a{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px}
+    nav a:hover, nav a.active{color:var(--text);background:var(--glass)}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr;place-items:center;text-align:center;padding:56px 18px 36px}
+    .hero-inner{width:100%;max-width:900px}
+    .profile{
+      width:140px;height:140px;border-radius:50%;object-fit:cover;border:4px solid rgba(255,255,255,0.06);box-shadow:0 10px 30px rgba(2,6,23,0.6);margin:0 auto;display:block}
+    h1{font-size:28px;margin:18px 0 8px}
+    p.lead{color:var(--muted);margin:0 auto;max-width:760px}
+    .cta{margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);cursor:pointer;text-decoration:none;color:var(--text)}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),#7c3aed);color:#041022;border:none}
+
+    /* Sections */
+    section{padding:36px 18px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:var(--radius);padding:18px}
+
+    /* Grid for projects and skills */
+    .grid{display:grid;gap:16px}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .grid-2{grid-template-columns:repeat(2,1fr)}
+    @media (max-width:900px){.grid-3{grid-template-columns:repeat(2,1fr)}.hero{padding:40px 10px}}
+    @media (max-width:600px){.grid-3,.grid-2{grid-template-columns:1fr}.profile{width:120px;height:120px}.hero{padding:30px 8px}}
+
+    .skill{display:inline-block;padding:8px 10px;border-radius:999px;background:rgba(255,255,255,0.03);color:var(--muted);font-weight:600}
+
+    /* Project card */
+    .project{display:flex;flex-direction:column;gap:12px}
+    .project img{width:100%;height:160px;object-fit:cover;border-radius:10px}
+    .project .meta{font-size:13px;color:var(--muted)}
+
+    /* Contact */
+    .contact-grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
+    @media (max-width:900px){.contact-grid{grid-template-columns:1fr}}
+    input,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)}
+
+    footer{padding:24px 18px;text-align:center;color:var(--muted)}
+
+    /* small helpers */
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:12px;align-items:center}
+
+    /* Mobile nav */
+    .menu-toggle{display:none}
+    @media (max-width:700px){nav{display:none}.menu-toggle{display:inline-flex}} 
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="nav">
+        <div class="brand">
+          <div class="logo">TN</div>
+          <div>
+            <div style="font-weight:700">Tu Nombre</div>
+            <div style="font-size:12px;color:var(--muted)">Desarrollador DAM</div>
+          </div>
+        </div>
+
+        <nav aria-label="Navegación principal">
+          <a href="#about">Sobre mí</a>
+          <a href="#skills">Habilidades</a>
+          <a href="#projects">Proyectos</a>
+          <a href="#contact">Contacto</a>
+        </nav>
+
+        <button class="menu-toggle btn" aria-label="Abrir menú">☰</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="top">
+        <div class="hero-inner card">
+          <img class="profile" src="assets/me.jpg.png" alt="Foto de Tu Nombre (reemplaza por tu foto)" />
+          <h1>Hola, soy <span style="color:var(--accent)">Tu Nombre</span></h1>
+          <p class="lead">Soy desarrollador formado en DAM. Me interesa construir apps móviles y web con buen diseño, código limpio y atención al usuario. Aquí tienes algunos de mis proyectos y habilidades.</p>
+          <div class="cta">
+            <a class="btn btn-primary" href="#projects">Ver proyectos</a>
+            <a class="btn" href="assets/me.jpg.png" download>Descargar CV</a>
+            <a class="btn" href="https://github.com/pauhernan7" target="_blank" rel="noopener">GitHub</a>
+            <a class="btn" href="https://www.linkedin.com/in/tuusuario" target="_blank" rel="noopener">LinkedIn</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="about">
+        <div class="card">
+          <h2>Sobre mí</h2>
+          <p class="muted">Soy graduado de DAM y he trabajado en proyectos de aplicaciones móviles y web. Me especializo en Java/Kotlin para Android, Flutter y desarrollo web con JavaScript. Busco oportunidades donde pueda seguir aprendiendo y aportar con soluciones prácticas.</p>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <span class="skill">DAM — Graduado</span>
+            <span class="skill">Java / Kotlin</span>
+            <span class="skill">Flutter</span>
+            <span class="skill">JavaScript</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills">
+        <h2>Habilidades</h2>
+        <div class="grid grid-3">
+          <div class="card">
+            <h3>Frontend</h3>
+            <p class="muted">HTML, CSS, JavaScript, React (o frameworks similares), accesibilidad y diseño responsivo.</p>
+          </div>
+          <div class="card">
+            <h3>Movil</h3>
+            <p class="muted">Kotlin (Android), Flutter, consumo de APIs, arquitectura MVVM.</p>
+          </div>
+          <div class="card">
+            <h3>Backend / DevOps</h3>
+            <p class="muted">Node.js, REST APIs, bases de datos SQL/NoSQL, despliegue en Netlify / Vercel / GitHub Pages.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects">
+        <h2>Proyectos</h2>
+        <div class="grid grid-3">
+          <!-- Proyecto 1 -->
+          <article class="card project">
+            <img src="assets/me.jpg.png" alt="Captura proyecto 1">
+            <div>
+              <div class="meta">App móvil — Android / Flutter</div>
+              <h3>Nombre del proyecto 1</h3>
+              <p class="muted">Breve descripción del proyecto: problema que resuelve, tecnologías y tu rol. Añade enlace al repositorio o demo.</p>
+              <div class="row" style="margin-top:8px">
+                <a class="btn" href="#" target="_blank">Repositorio</a>
+                <a class="btn" href="#" target="_blank">Demo</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Proyecto 2 -->
+          <article class="card project">
+            <img src="assets/me.jpg.png" alt="Captura proyecto 2">
+            <div>
+              <div class="meta">Web — React</div>
+              <h3>Nombre del proyecto 2</h3>
+              <p class="muted">Descripción corta del proyecto, las tecnologías y retos que resolviste.</p>
+              <div class="row" style="margin-top:8px">
+                <a class="btn" href="#" target="_blank">Repositorio</a>
+                <a class="btn" href="#" target="_blank">Demo</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Proyecto 3 -->
+          <article class="card project">
+            <img src="assets/me.jpg.png" alt="Captura proyecto 3">
+            <div>
+              <div class="meta">API / Backend</div>
+              <h3>Nombre del proyecto 3</h3>
+              <p class="muted">Descripción breve con foco técnico y links.</p>
+              <div class="row" style="margin-top:8px">
+                <a class="btn" href="#" target="_blank">Repositorio</a>
+                <a class="btn" href="#" target="_blank">Demo</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="contact">
+        <h2>Contacto</h2>
+        <div class="contact-grid">
+          <div class="card">
+            <p class="muted">Si quieres contactar conmigo, puedes usar el formulario o escribirme a <a href="mailto:tuemail@example.com">tuemail@example.com</a>. También puedes contactarme por LinkedIn o GitHub.</p>
+            <div style="margin-top:16px">
+              <strong>Teléfono</strong>
+              <div class="muted">+34 600 000 000</div>
+            </div>
+            <div style="margin-top:12px">
+              <strong>Ubicación</strong>
+              <div class="muted">Ciudad, País</div>
+            </div>
+          </div>
+
+          <form class="card" method="POST" action="https://formspree.io/f/your-form-id" aria-label="Formulario de contacto">
+            <label for="name">Nombre</label>
+            <input id="name" name="name" required placeholder="Tu nombre">
+
+            <label for="email" style="margin-top:8px">Email</label>
+            <input id="email" name="email" type="email" required placeholder="tu@correo.com">
+
+            <label for="message" style="margin-top:8px">Mensaje</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Escribe tu mensaje..."></textarea>
+
+            <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+              <button class="btn" type="reset">Borrar</button>
+              <button class="btn btn-primary" type="submit">Enviar</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="muted">© <span id="year"></span> Tu Nombre — Hecho con ♥</div>
+    </footer>
+  </div>
+
+  <script>
+    // rellena año
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // mobile menu toggle
+    const btn = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('nav');
+    btn && btn.addEventListener('click', ()=>{
+      if(nav.style.display === 'block') nav.style.display = '';
+      else nav.style.display = 'block';
+    });
+
+    // añadir clase active al hacer scroll
+    const sections = document.querySelectorAll('main section[id]');
+    const navLinks = document.querySelectorAll('nav a');
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        const id = entry.target.id;
+        const link = document.querySelector('nav a[href="#'+id+'"]');
+        if(entry.isIntersecting){
+          navLinks.forEach(l=>l.classList.remove('active'));
+          link && link.classList.add('active');
+        }
+      });
+    },{threshold:0.5});
+    sections.forEach(s=>observer.observe(s));
+  </script>
+</body>
+</html>
